@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cihaz Detay — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+
+        <!-- Device header -->
+        <div class="device-header" id="deviceHeader">
+          <div class="loading-spinner">Cihaz bilgileri yukleniyor...</div>
+        </div>
+
+        <!-- Info panels -->
+        <div class="metrics-grid" id="deviceMetrics"></div>
+
+        <!-- Tabs -->
+        <div class="tab-bar">
+          <button class="tab active" data-tab="tab-general">Genel Bilgiler</button>
+          <button class="tab" data-tab="tab-hardware">Donanim</button>
+          <button class="tab" data-tab="tab-software">Yazilimlar</button>
+          <button class="tab" data-tab="tab-updates">Guncellemeler</button>
+          <button class="tab" data-tab="tab-security">Guvenlik</button>
+        </div>
+
+        <div id="tab-general" class="tab-content active">
+          <div class="table-card">
+            <h3>Genel Bilgiler</h3>
+            <div class="panel-info-grid" id="generalInfo"></div>
+          </div>
+        </div>
+
+        <div id="tab-hardware" class="tab-content">
+          <div class="table-card">
+            <h3>Donanim Bilgileri</h3>
+            <div class="panel-info-grid" id="hardwareInfo"></div>
+          </div>
+        </div>
+
+        <div id="tab-software" class="tab-content">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3>Yuklu Yazilimlar</h3>
+              <button class="btn btn-secondary" id="btnExportSw">CSV Export</button>
+            </div>
+            <table id="softwareTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Uygulama</th><th>Versiyon</th><th>Yayinci</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-updates" class="tab-content">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3>Guncelleme Durumu</h3>
+              <button class="btn btn-secondary" id="btnExportUpd">CSV Export</button>
+            </div>
+            <table id="updatesTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Guncelleme</th><th>Durum</th><th>Son Tarih</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-security" class="tab-content">
+          <div class="table-card">
+            <h3>Guvenlik Durumu</h3>
+            <div class="panel-info-grid" id="securityInfo"></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/device-detail.js"></script>
+</body>
+</html>

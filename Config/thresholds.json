@@ -1,0 +1,53 @@
+{
+  "updateDeployment": {
+    "compliancePercent": { "warning": 80, "critical": 60 },
+    "failedCount": { "warning": 3, "critical": 10 }
+  },
+  "asset": {
+    "staleDeviceDays": 30,
+    "clientHealthPercent": { "warning": 85, "critical": 70 }
+  },
+  "clientPC": {
+    "pendingRestartPercent": { "warning": 20, "critical": 40 },
+    "clientVersionMismatchPercent": { "warning": 15, "critical": 30 }
+  },
+  "server": {
+    "pendingUpdateCount": { "warning": 5, "critical": 15 },
+    "uptimeDays": { "warning": 90, "critical": 180 },
+    "highUptimeCount": { "warning": 2, "critical": 5 }
+  },
+  "appDeployment": {
+    "successRatePercent": { "warning": 85, "critical": 70 },
+    "failedCount": { "warning": 5, "critical": 15 }
+  },
+  "taskDeployment": {
+    "successRatePercent": { "warning": 85, "critical": 70 }
+  },
+  "contentDistribution": {
+    "successRatePercent": { "warning": 90, "critical": 75 }
+  },
+  "bitlocker": {
+    "encryptionPercent": { "warning": 90, "critical": 75 }
+  },
+  "laps": {
+    "coveragePercent": { "warning": 90, "critical": 70 }
+  },
+  "hardwareFirmware": {
+    "tpmPercent": { "warning": 90, "critical": 70 },
+    "uefiPercent": { "warning": 90, "critical": 70 }
+  },
+  "cmg": {
+    "onlineClientsPercent": { "warning": 80, "critical": 50 }
+  },
+  "sccmHealth": {
+    "componentHealthPercent": { "warning": 90, "critical": 70 }
+  },
+  "systemHealth": {
+    "querySuccessPercent": { "warning": 90, "critical": 70 }
+  },
+  "dbMonitor": {
+    "dbSizeGB": { "warning": 50, "critical": 80 },
+    "componentErrors": { "warning": 1, "critical": 5 },
+    "backupAgeDays": { "warning": 1, "critical": 3 }
+  }
+}

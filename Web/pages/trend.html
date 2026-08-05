@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trend Analizi — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+
+        <div id="alertArea"></div>
+
+        <!-- Zaman araligi secimi -->
+        <div class="table-card" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+            <h3 style="margin:0" data-i18n="trend.range">Zaman Araligi</h3>
+            <div>
+              <button class="btn btn-secondary btn-sm" data-range="7" data-i18n="trend.last7">Son 7 gun</button>
+              <button class="btn btn-primary btn-sm" data-range="30" data-i18n="trend.last30">Son 30 gun</button>
+              <button class="btn btn-secondary btn-sm" data-range="0" data-i18n="trend.all">Tumu</button>
+              <button class="btn btn-secondary btn-sm" id="btnExportTrend" data-i18n="common.csvExport">CSV Export</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="metrics-grid" id="metrics"></div>
+
+        <div class="charts-grid" style="margin-top:24px">
+          <div class="chart-card">
+            <h3 data-i18n="trend.deviceCount">Cihaz Sayisi</h3>
+            <div class="chart-container"><canvas id="chartDevices"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="trend.complianceTrend">Update Compliance (%)</h3>
+            <div class="chart-container"><canvas id="chartCompliance"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="trend.failureTrend">Basarisiz Deployment</h3>
+            <div class="chart-container"><canvas id="chartFailures"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="trend.bitlockerTrend">BitLocker Koruma Orani (%)</h3>
+            <div class="chart-container"><canvas id="chartBitlocker"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="trend.healthTrend">Component Hatalari &amp; Alertler</h3>
+            <div class="chart-container"><canvas id="chartHealth"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="trend.durationTrend">Cache Refresh Suresi (sn)</h3>
+            <div class="chart-container"><canvas id="chartDuration"></canvas></div>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top:24px">
+          <h3 data-i18n="trend.table">Gecmis Kayitlar</h3>
+          <table id="trendTable" class="display" style="width:100%">
+            <thead><tr>
+              <th data-i18n="trend.timestamp">Zaman</th>
+              <th data-i18n="dash.totalDevices">Cihaz</th>
+              <th data-i18n="common.active">Aktif</th>
+              <th data-i18n="trend.complianceTrend">Compliance</th>
+              <th data-i18n="trend.failureTrend">Failed</th>
+              <th data-i18n="page.bitlocker">BitLocker</th>
+              <th data-i18n="trend.healthTrend">Hata/Alert</th>
+              <th data-i18n="sys.duration">Sure (sn)</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/trend.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raporlar — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+
+        <div class="metrics-grid" id="metrics"></div>
+
+        <div class="tab-bar">
+          <button class="tab active" data-tab="tab-templates" data-i18n="rpt.readyReports">Hazir Raporlar</button>
+          <button class="tab" data-tab="tab-custom" data-i18n="rpt.customReport">Ozel Rapor Olustur</button>
+          <button class="tab" data-tab="tab-scheduled" data-i18n="rpt.scheduledReports">Zamanlanmis Raporlar</button>
+        </div>
+
+        <!-- ─── Hazir Raporlar ─── -->
+        <div id="tab-templates" class="tab-content active">
+          <div class="report-grid" id="reportTemplates"></div>
+        </div>
+
+        <!-- ─── Ozel Rapor Olustur ─── -->
+        <div id="tab-custom" class="tab-content">
+          <div class="table-card">
+            <h3 data-i18n="rpt.customDesigner">Ozel Rapor Tasarlayici</h3>
+            <div class="report-builder">
+              <div class="builder-row">
+                <div class="builder-field">
+                  <label data-i18n="rpt.reportName">Rapor Adi</label>
+                  <input type="text" id="reportName" placeholder="Rapor adi girin..." />
+                </div>
+                <div class="builder-field">
+                  <label data-i18n="rpt.dataSource">Veri Kaynagi</label>
+                  <select id="reportSource">
+                    <option value="">Secin...</option>
+                    <option value="asset">Asset Envanteri</option>
+                    <option value="server">Server</option>
+                    <option value="client_pc">Client PC</option>
+                    <option value="app_inventory">Uygulama Envanteri</option>
+                    <option value="app_inventory_detail">Uygulama Detay</option>
+                    <option value="update_deployment">Update Deployment</option>
+                    <option value="app_deployment">App Deployment</option>
+                    <option value="bitlocker">BitLocker</option>
+                    <option value="cmg_clients">CMG Clients</option>
+                    <option value="db_monitor">DB Monitor</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="builder-row">
+                <div class="builder-field full-width">
+                  <label data-i18n="rpt.columns">Kolonlar</label> <small data-i18n="rpt.colHint">(secim yapilmazsa tum kolonlar dahil edilir)</small>
+                  <div class="column-selector" id="columnSelector">
+                    <div class="empty-state" style="padding:20px">Once veri kaynagi secin</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="builder-row">
+                <div class="builder-field">
+                  <label data-i18n="rpt.filterColumn">Filtre Kolonu</label>
+                  <select id="filterColumn"><option value="" data-i18n="rpt.noFilter">Filtre yok</option></select>
+                </div>
+                <div class="builder-field">
+                  <label data-i18n="rpt.filterOp">Filtre Operatoru</label>
+                  <select id="filterOperator">
+                    <option value="contains" data-i18n="rpt.contains">Icerir</option>
+                    <option value="equals" data-i18n="rpt.equals">Esittir</option>
+                    <option value="not_equals" data-i18n="rpt.notEquals">Esit Degil</option>
+                    <option value="greater" data-i18n="rpt.greaterThan">Buyuktur</option>
+                    <option value="less" data-i18n="rpt.lessThan">Kucuktur</option>
+                  </select>
+                </div>
+                <div class="builder-field">
+                  <label data-i18n="rpt.filterValue">Filtre Degeri</label>
+                  <input type="text" id="filterValue" placeholder="Deger..." />
+                </div>
+              </div>
+
+              <div class="builder-row">
+                <div class="builder-field">
+                  <label data-i18n="rpt.sortBy">Siralama</label>
+                  <select id="sortColumn"><option value="" data-i18n="rpt.default">Varsayilan</option></select>
+                </div>
+                <div class="builder-field">
+                  <label data-i18n="rpt.sortDir">Siralama Yonu</label>
+                  <select id="sortDirection">
+                    <option value="asc" data-i18n="rpt.ascending">Artan (A-Z)</option>
+                    <option value="desc" data-i18n="rpt.descending">Azalan (Z-A)</option>
+                  </select>
+                </div>
+                <div class="builder-field">
+                  <label data-i18n="rpt.limit">Limit</label>
+                  <select id="reportLimit">
+                    <option value="0" data-i18n="rpt.allRecords">Tum kayitlar</option>
+                    <option value="10" data-i18n="rpt.first10">Ilk 10</option>
+                    <option value="25" data-i18n="rpt.first25">Ilk 25</option>
+                    <option value="50" data-i18n="rpt.first50">Ilk 50</option>
+                    <option value="100" data-i18n="rpt.first100">Ilk 100</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="builder-actions">
+                <button class="btn btn-primary" id="btnPreview" data-i18n="rpt.preview">Onizleme</button>
+                <button class="btn btn-success" id="btnDownloadCSV" data-i18n="rpt.downloadCsv">CSV Indir</button>
+                <button class="btn btn-secondary" id="btnSaveSchedule" data-i18n="rpt.schedule">Zamanla / Kaydet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="table-card" id="previewCard" style="display:none;margin-top:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3 id="previewTitle" data-i18n="rpt.preview">Onizleme</h3>
+              <span class="badge badge-info" id="previewCount"></span>
+            </div>
+            <table id="previewTable" class="display" style="width:100%">
+              <thead><tr id="previewHead"></tr></thead>
+              <tbody id="previewBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ─── Zamanlanmis Raporlar ─── -->
+        <div id="tab-scheduled" class="tab-content">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3 data-i18n="rpt.savedScheduled">Kayitli & Zamanlanmis Raporlar</h3>
+              <button class="btn btn-danger" id="btnClearScheduled" style="font-size:var(--font-size-xs)" data-i18n="rpt.clearAll">Tumunu Temizle</button>
+            </div>
+            <div id="scheduledList"></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/reports.js"></script>
+</body>
+</html>

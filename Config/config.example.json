@@ -1,0 +1,21 @@
+{
+    "sqlServer":  "SCCM-SQL-SUNUCU-ADI",
+    "database":  "CM_XXX",
+    "outputPath":  "C:\\SCCMDashboard\\Web\\data",
+    "queriesPath":  "C:\\SCCMDashboard\\CacheService\\queries",
+    "logPath":  "C:\\SCCMDashboard\\CacheService\\logs",
+
+    "refreshApiPort":  9091,
+    "refreshIntervalMinutes":  60,
+
+    "queryTimeoutSeconds":  300,
+    "connectionTimeoutSeconds":  30,
+
+    "logRetentionDays":  30,
+    "historyRetentionDays":  90,
+
+    "staleThresholdMinutes":  90,
+    "autoRefreshSeconds":  120,
+
+    "allowedOrigins":  []
+}

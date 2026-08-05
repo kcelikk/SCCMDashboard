@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+
+        <!-- Critical alerts -->
+        <div id="alertArea"></div>
+
+        <!-- Summary metrics -->
+        <div class="metrics-grid" id="metricsTop"></div>
+
+        <!-- Page summary cards -->
+        <h3 style="margin:24px 0 12px;font-size:var(--font-size-md);color:var(--text-secondary)" data-i18n="dash.pageSummaries">Sayfa Ozetleri</h3>
+        <div class="metrics-grid" id="pageSummaries"></div>
+
+        <!-- Quick charts -->
+        <div class="charts-grid" style="margin-top:24px">
+          <div class="chart-card">
+            <h3 data-i18n="dash.deviceDist">Cihaz Dagilimi</h3>
+            <div class="chart-container"><canvas id="chartDevices"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="dash.complianceSummary">Update Compliance Ozeti</h3>
+            <div class="chart-container"><canvas id="chartCompliance"></canvas></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    async function init() {
+      await Dashboard.init('index', 'Dashboard');
+
+      // Load all data sources in parallel
+      var results = await Promise.all([
+        Dashboard.fetchData('asset'),
+        Dashboard.fetchData('update_deployment'),
+        Dashboard.fetchData('app_deployment'),
+        Dashboard.fetchData('bitlocker'),
+        Dashboard.fetchData('cmg_clients'),
+        Dashboard.fetchData('db_monitor'),
+        Dashboard.fetchData('_cache_meta')
+      ]);
+
+      var asset = results[0] || [];
+      var updates = results[1] || [];
+      var apps = results[2] || [];
+      var bitlocker = results[3] || [];
+      var cmgClients = results[4] || [];
+      var dbComp = results[5] || [];
+      var meta = results[6];
+
+      renderAlerts(updates, dbComp, meta);
+      renderTopMetrics(asset, updates);
+      renderPageSummaries(asset, updates, apps, bitlocker, cmgClients, dbComp);
+      renderCharts(asset, updates);
+    }
+
+    function renderAlerts(updates, dbComp, meta) {
+      var area = document.getElementById('alertArea');
+      var alerts = [];
+
+      // Failed updates
+      var totalFailed = updates.reduce(function (s, d) { return s + (d.Failed || 0); }, 0);
+      if (totalFailed > 10) alerts.push({ level: 'critical', text: totalFailed + ' basarisiz update tespit edildi!' });
+      else if (totalFailed > 3) alerts.push({ level: 'warning', text: totalFailed + ' basarisiz update mevcut.' });
+
+      // Component errors
+      var compErrors = dbComp.reduce(function (s, d) { return s + (d.Errors || 0); }, 0);
+      if (compErrors > 0) alerts.push({ level: 'critical', text: compErrors + ' component hatasi tespit edildi!' });
+
+      // Stale cache
+      if (meta && meta.status === 'error') alerts.push({ level: 'critical', text: 'Cache servisi hata veriyor!' });
+      else if (meta && meta.status === 'partial_error') alerts.push({ level: 'warning', text: 'Bazi cache sorgulari basarisiz oldu.' });
+
+      area.innerHTML = alerts.map(function (a) {
+        return '<div class="alert-banner ' + a.level + '">' +
+          (a.level === 'critical' ? '&#9888; ' : '&#9432; ') + a.text + '</div>';
+      }).join('');
+    }
+
+    function renderTopMetrics(asset, updates) {
+      var c = document.getElementById('metricsTop');
+      c.innerHTML = '';
+
+      var totalDevices = asset.length;
+      var servers = asset.filter(function (d) { return d.DeviceType === 'Server'; }).length;
+      var wks = totalDevices - servers;
+
+      var activeDevices = asset.filter(function (d) {
+        if (!d.LastActiveTime) return false;
+        return (Date.now() - new Date(d.LastActiveTime).getTime()) < 30 * 86400000;
+      }).length;
+
+      var totalDep = updates.length;
+      var totalInstalled = updates.reduce(function (s, d) { return s + (d.Installed || 0); }, 0);
+      var totalTarget = updates.reduce(function (s, d) { return s + (d.TotalDevices || 0); }, 0);
+      var compliance = totalTarget > 0 ? (totalInstalled / totalTarget * 100) : 0;
+      var compColor = Dashboard.thresholdColor('updateDeployment', 'compliancePercent', compliance, { warning: 80, critical: 60 }, false);
+
+      c.appendChild(Dashboard.createMetricCard('Toplam Cihaz', Dashboard.formatNumber(totalDevices), {
+        icon: '&#9000;', color: 'blue', sub: servers + ' server, ' + wks + ' workstation'
+      }));
+      c.appendChild(Dashboard.createMetricCard('Aktif Cihaz', Dashboard.formatNumber(activeDevices), {
+        icon: '&#10003;', color: 'green', sub: Dashboard.formatPercent(totalDevices > 0 ? activeDevices / totalDevices * 100 : 0) + ' aktif'
+      }));
+      c.appendChild(Dashboard.createMetricCard('Update Compliance', Dashboard.formatPercent(compliance), {
+        icon: '&#8635;', color: compColor, statusClass: Dashboard.getStatusClass(compColor),
+        sub: totalDep + ' deployment'
+      }));
+      c.appendChild(Dashboard.createMetricCard('Stale Cihaz', Dashboard.formatNumber(totalDevices - activeDevices), {
+        icon: '&#9888;', color: (totalDevices - activeDevices) > 0 ? 'yellow' : 'green'
+      }));
+    }
+
+    function renderPageSummaries(asset, updates, apps, bitlocker, cmgClients, dbComp) {
+      var c = document.getElementById('pageSummaries');
+      c.innerHTML = '';
+
+      // Update Deployment
+      var totalFailed = updates.reduce(function (s, d) { return s + (d.Failed || 0); }, 0);
+      c.appendChild(Dashboard.createMetricCard('Update Deployment', updates.length + ' deployment', {
+        icon: '&#8635;', color: totalFailed > 3 ? 'red' : 'blue',
+        sub: totalFailed + ' failed',
+        onClick: function () { window.location.href = '/pages/update-deployment.html'; }
+      }));
+
+      // App Deployment
+      var appFailed = apps.reduce(function (s, d) { return s + (d.Failed || 0); }, 0);
+      c.appendChild(Dashboard.createMetricCard('App Deployment', apps.length + ' deployment', {
+        icon: '&#9654;', color: appFailed > 5 ? 'red' : 'blue',
+        sub: appFailed + ' failed',
+        onClick: function () { window.location.href = '/pages/app-deployment.html'; }
+      }));
+
+      // BitLocker
+      var blDevices = new Set(bitlocker.map(function (d) { return d.ResourceID; })).size;
+      var blProtected = new Set(bitlocker.filter(function (d) { return d.ProtectionStatus === 1 && d.DriveLetter === 'C:'; }).map(function (d) { return d.ResourceID; })).size;
+      c.appendChild(Dashboard.createMetricCard('BitLocker', blProtected + ' / ' + blDevices + ' korumali', {
+        icon: '&#9919;', color: blProtected < blDevices ? 'yellow' : 'green',
+        onClick: function () { window.location.href = '/pages/bitlocker.html'; }
+      }));
+
+      // CMG
+      var internetClients = cmgClients.filter(function (d) { return d.InternetEnabled === 1; }).length;
+      c.appendChild(Dashboard.createMetricCard('CMG', internetClients + ' internet client', {
+        icon: '&#9729;', color: 'blue',
+        onClick: function () { window.location.href = '/pages/cmg.html'; }
+      }));
+
+      // DB Monitor
+      var compErrors = dbComp.reduce(function (s, d) { return s + (d.Errors || 0); }, 0);
+      c.appendChild(Dashboard.createMetricCard('DB Monitor', compErrors + ' hata', {
+        icon: '&#9881;', color: compErrors > 0 ? 'red' : 'green',
+        onClick: function () { window.location.href = '/pages/db-monitor.html'; }
+      }));
+    }
+
+    function renderCharts(asset, updates) {
+      var colors = Dashboard.chartColors();
+
+      // Cihaz dagilimi — iki kategori, tek olcum. Iki dilimli halka yerine
+      // cubuk: uzunluk karsilastirmasi acidan cok daha okunur.
+      var servers = asset.filter(function (d) { return d.DeviceType === 'Server'; }).length;
+      var wks = asset.length - servers;
+      Dashboard.chart('chartDevices', {
+        type: 'bar',
+        data: {
+          labels: ['Server', 'Workstation'],
+          datasets: [{ _slot: 1, data: [servers, wks], backgroundColor: colors[0] }]
+        },
+        options: {
+          indexAxis: 'y',
+          scales: { x: { grid: { display: true } }, y: { grid: { display: false } } }
+        }
+      });
+
+      // Update compliance summary
+      var totalInstalled = updates.reduce(function (s, d) { return s + (d.Installed || 0); }, 0);
+      var totalRequired = updates.reduce(function (s, d) { return s + (d.Required || 0); }, 0);
+      var totalFailed = updates.reduce(function (s, d) { return s + (d.Failed || 0); }, 0);
+      var totalUnknown = updates.reduce(function (s, d) { return s + (d.Unknown || 0); }, 0);
+
+      var st = Dashboard.statusColors();
+      Dashboard.chart('chartCompliance', {
+        type: 'doughnut',
+        data: {
+          labels: ['Installed', 'Required', 'Failed', 'Unknown'],
+          // Kurulu/Gerekli/Basarisiz/Bilinmiyor DURUM anlatir -> rezerve renkler
+          datasets: [{
+            data: [totalInstalled, totalRequired, totalFailed, totalUnknown],
+            backgroundColor: [st.good, st.warning, st.critical, Dashboard.chartMutedColor()]
+          }]
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  })();
+  </script>
+</body>
+</html>

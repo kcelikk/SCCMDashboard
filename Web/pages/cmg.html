@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMG — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+        <div class="metrics-grid" id="metrics"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3 data-i18n="cmg.clientConnType">Client Baglanti Tipi</h3>
+            <div class="chart-container"><canvas id="chartConnType"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="cmg.infra">CMG Altyapi</h3>
+            <div id="cmgInfoPanel" class="chart-container" style="padding:16px;overflow-y:auto"></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 data-i18n="cmg.clientList">Client Listesi</h3>
+            <button class="btn btn-secondary" id="btnExport" data-i18n="common.csvExport">CSV Export</button>
+          </div>
+          <table id="cmgTable" class="display" style="width:100%">
+            <thead><tr>
+              <th data-i18n="asset.hostname">Hostname</th><th>Client Version</th><th>Internet</th>
+              <th>Always Internet</th><th>Management Point</th><th data-i18n="asset.lastActivity">Son Aktivite</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/cmg.js"></script>
+</body>
+</html>

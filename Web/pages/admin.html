@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yonetim — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+
+        <div id="alertArea"></div>
+
+        <!-- Aktif kullanici secimi (RBAC kimligi) -->
+        <div class="table-card" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+            <div>
+              <h3 style="margin:0" data-i18n="rbac.currentUser">Aktif Kullanici</h3>
+              <div class="text-muted" style="font-size:var(--font-size-sm);margin-top:4px"
+                   data-i18n="rbac.clientSideWarning"></div>
+            </div>
+            <select id="currentUserSelect" class="btn btn-secondary" style="min-width:240px"></select>
+          </div>
+        </div>
+
+        <div class="metrics-grid" id="metrics"></div>
+
+        <div class="tab-bar">
+          <button class="tab active" data-tab="tab-roles">Roller & Erisim</button>
+          <button class="tab" data-tab="tab-users">Kullanici Yetkileri</button>
+          <button class="tab" data-tab="tab-audit">Erisim Logu</button>
+        </div>
+
+        <!-- ─── Roller ─── -->
+        <div id="tab-roles" class="tab-content active">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3>Tanimli Roller</h3>
+              <button class="btn btn-primary" id="btnAddRole">+ Yeni Rol</button>
+            </div>
+            <table id="rolesTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Rol Adi</th><th>Aciklama</th><th>Erisim Sayfalari</th><th>Kullanici Sayisi</th><th>Islemler</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <!-- Role definitions -->
+          <div class="table-card" style="margin-top:16px">
+            <h3>Sayfa Erisim Matrisi</h3>
+            <div id="accessMatrix"></div>
+          </div>
+        </div>
+
+        <!-- ─── Kullanici Yetkileri ─── -->
+        <div id="tab-users" class="tab-content">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3>Kullanici Atamalari</h3>
+              <button class="btn btn-primary" id="btnAddUser">+ Kullanici Ekle</button>
+            </div>
+            <table id="usersTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Kullanici / Grup</th><th>Tip</th><th>Atanan Rol</th><th>Atanma Tarihi</th><th>Islemler</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ─── Erisim Logu ─── -->
+        <div id="tab-audit" class="tab-content">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3>Erisim Kayitlari</h3>
+              <button class="btn btn-secondary" id="btnExportAudit">CSV Export</button>
+            </div>
+            <table id="auditTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Tarih</th><th>Kullanici</th><th>Sayfa</th><th>Islem</th><th>Detay</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/admin.js"></script>
+</body>
+</html>

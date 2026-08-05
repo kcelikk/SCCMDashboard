@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Inventory — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+        <div class="metrics-grid" id="metrics"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3 data-i18n="inv.topApps">En Yaygin Uygulamalar (Top 10)</h3>
+            <div class="chart-container"><canvas id="chartTop"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="inv.topPublishers">En Cok Publisher (Top 10)</h3>
+            <div class="chart-container"><canvas id="chartPublisher"></canvas></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 data-i18n="inv.appInventory">Uygulama Envanteri</h3>
+            <button class="btn btn-secondary" id="btnExport" data-i18n="common.csvExport">CSV Export</button>
+          </div>
+          <table id="appTable" class="display" style="width:100%">
+            <thead><tr>
+              <th data-i18n="inv.appName">Uygulama Adi</th><th>Publisher</th><th>Version</th><th data-i18n="inv.installedDevices">Kurulu Cihaz</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/app-inventory.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCCM Health — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+        <div id="alertArea"></div>
+        <div class="metrics-grid" id="metrics"></div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3 data-i18n="health.serviceDist">Servis Durumu Dagilimi</h3>
+            <div class="chart-container"><canvas id="chartState"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="health.compErrors">Component Hata/Uyari</h3>
+            <div class="chart-container"><canvas id="chartErrors"></canvas></div>
+          </div>
+        </div>
+
+        <div class="tab-bar">
+          <button class="tab active" data-tab="tab-components" data-i18n="health.components">Servisler / Component'lar</button>
+          <button class="tab" data-tab="tab-site" data-i18n="health.siteSystems">Site Sistemleri</button>
+          <button class="tab" data-tab="tab-inbox" data-i18n="health.inboxQueue">Inbox Kuyrugu</button>
+        </div>
+
+        <div id="tab-components" class="tab-content active">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3 data-i18n="health.compStatus">SCCM Component Durumlari</h3>
+              <div style="display:flex;gap:8px;align-items:center">
+                <select id="filterState" class="filter-select">
+                  <option value="" data-i18n="asset.allStatus">Tum Durumlar</option>
+                  <option value="Stopped">Stopped</option>
+                  <option value="Started">Started</option>
+                  <option value="Critical">Critical</option>
+                  <option value="Warning">Warning</option>
+                </select>
+                <button class="btn btn-secondary" id="btnExport" data-i18n="common.csvExport">CSV Export</button>
+              </div>
+            </div>
+            <table id="compTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Component</th><th>Site</th><th data-i18n="health.serviceStatus">Servis Durumu</th><th>Health</th>
+                <th data-i18n="health.errors">Hatalar</th><th data-i18n="health.warnings">Uyarilar</th><th data-i18n="asset.type">Tip</th><th data-i18n="health.lastMsg">Son Mesaj</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-site" class="tab-content">
+          <div class="table-card">
+            <h3 data-i18n="health.siteRoles">Site Sistem Rolleri</h3>
+            <table id="siteTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Site Code</th><th>Site System</th><th>Role</th><th data-i18n="asset.status">Durum</th><th data-i18n="health.availability">Kullanilabilirlik</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-inbox" class="tab-content">
+          <div class="table-card">
+            <h3 data-i18n="health.inboxStatus">Inbox Kuyruk Durumu</h3>
+            <table id="inboxTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Site</th><th>Inbox</th><th data-i18n="health.fileCount">Dosya Sayisi</th><th data-i18n="health.lastWrite">Son Yazma</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/sccm-health.js"></script>
+</body>
+</html>

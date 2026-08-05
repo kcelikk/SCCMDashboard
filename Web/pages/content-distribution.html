@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Distribution — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+        <div id="alertArea"></div>
+        <div class="metrics-grid" id="metrics"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3 data-i18n="cd.distStatus">Dagitim Durumu</h3>
+            <div class="chart-container"><canvas id="chartState"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="cd.pkgTypeDist">Paket Tipi Dagilimi</h3>
+            <div class="chart-container"><canvas id="chartType"></canvas></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 data-i18n="cd.cdStatus">Content Distribution Durumu</h3>
+            <button class="btn btn-secondary" id="btnExport" data-i18n="common.csvExport">CSV Export</button>
+          </div>
+          <table id="cdTable" class="display" style="width:100%">
+            <thead><tr>
+              <th>Package</th><th data-i18n="asset.type">Type</th>
+              <th>Targeted</th><th>Installed</th><th>Errors</th><th data-i18n="asset.status">Status</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/content-distribution.js"></script>
+</body>
+</html>

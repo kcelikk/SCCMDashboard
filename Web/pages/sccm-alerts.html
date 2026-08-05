@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCCM Alerts — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+
+        <!-- SOC-style alert banner -->
+        <div id="alertBanner"></div>
+
+        <div class="metrics-grid" id="metrics"></div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3 data-i18n="alert.sevDist">Alert Severity Dagilimi</h3>
+            <div class="chart-container"><canvas id="chartSeverity"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="alert.stateDist">Alert Durum Dagilimi</h3>
+            <div class="chart-container"><canvas id="chartAlertState"></canvas></div>
+          </div>
+        </div>
+
+        <!-- SOC-style alert timeline -->
+        <div class="table-card" id="activeAlertsSection">
+          <h3 style="color:var(--color-danger)" data-i18n="alert.activeAlerts">&#9888; Aktif Alertler</h3>
+          <div id="activeAlertsList"></div>
+        </div>
+
+        <div class="table-card" style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 data-i18n="alert.allAlerts">Tum Alertler</h3>
+            <div style="display:flex;gap:8px;align-items:center">
+              <select id="filterSeverity" class="filter-select">
+                <option value="" data-i18n="alert.allSeverity">Tum Severity</option>
+                <option value="Error" data-i18n="common.error">Error</option>
+                <option value="Warning" data-i18n="common.warning">Warning</option>
+                <option value="Informational">Informational</option>
+              </select>
+              <select id="filterAlertState" class="filter-select">
+                <option value="" data-i18n="alert.allStates">Tum Durumlar</option>
+                <option value="Active">Active</option>
+                <option value="Postponed">Postponed</option>
+                <option value="Canceled">Canceled</option>
+              </select>
+              <button class="btn btn-secondary" id="btnExport" data-i18n="common.csvExport">CSV Export</button>
+            </div>
+          </div>
+          <table id="alertTable" class="display" style="width:100%">
+            <thead><tr>
+              <th>Severity</th><th>Alert</th><th data-i18n="asset.status">Durum</th><th data-i18n="alert.source">Kaynak</th>
+              <th data-i18n="alert.created">Olusturulma</th><th data-i18n="alert.lastModified">Son Degisiklik</th><th data-i18n="alert.occurrence">Tekrar</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/sccm-alerts.js"></script>
+</body>
+</html>

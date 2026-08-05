@@ -1,0 +1,25 @@
+# ── Calisma zamani ciktilari (kaynak degil, uretilen veri) ──
+# Bu dosyalar canli SCCM ortamindan uretilir: hostname, ic IP adresleri,
+# AD distinguished name'leri, atanmis kullanicilar, client surumleri.
+# Depoya girmemeli — hem kaynak kod degiller hem de ic ag haritasi sayilirlar.
+Web/data/*.json
+CacheService/logs/
+
+# ── Ortama ozel konfigurasyon ──
+# Gercek SQL sunucu adi ve veritabani adini icerir.
+# Ornek sablon icin Config/config.example.json dosyasina bakin.
+# (Install.ps1 kurulum sirasinda bu dosyayi zaten kendisi olusturur.)
+Config/config.json
+
+# ── Editor / OS ──
+.vs/
+.vscode/
+*.suo
+*.user
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Claude Code yerel ayarlari (makineye ozel, kaynak degil)
+.claude/settings.local.json

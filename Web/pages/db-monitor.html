@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DB Monitor — SCCM Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide-panel.css">
+  <link rel="stylesheet" href="/css/datatables.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar"></aside>
+    <div class="main-wrapper">
+      <header class="header"></header>
+      <main class="main-content">
+        <div class="metrics-grid" id="metrics"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3 data-i18n="db.compStatusDist">Component Durum Dagilimi</h3>
+            <div class="chart-container"><canvas id="chartComponents"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="db.dbSize">DB Boyutu</h3>
+            <div id="dbSizePanel" class="chart-container" style="padding:16px;overflow-y:auto"></div>
+          </div>
+        </div>
+
+        <div class="tab-bar">
+          <button class="tab active" data-tab="tab-components" data-i18n="db.compTab">Component Status</button>
+          <button class="tab" data-tab="tab-site" data-i18n="db.siteTab">Site System</button>
+          <button class="tab" data-tab="tab-backup" data-i18n="db.backupTab">Backup</button>
+        </div>
+
+        <div id="tab-components" class="tab-content active">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3 data-i18n="db.compStatus">Component Durumu</h3>
+              <button class="btn btn-secondary btn-export" data-target="comp" data-i18n="common.csvExport">CSV Export</button>
+            </div>
+            <table id="compTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Component</th><th>Site</th><th data-i18n="asset.status">Durum</th>
+                <th data-i18n="health.errors">Hatalar</th><th data-i18n="health.warnings">Uyarilar</th><th>State</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-site" class="tab-content">
+          <div class="table-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3 data-i18n="db.siteSystemStatus">Site System Durumu</h3>
+              <button class="btn btn-secondary btn-export" data-target="site" data-i18n="common.csvExport">CSV Export</button>
+            </div>
+            <table id="siteTable" class="display" style="width:100%">
+              <thead><tr>
+                <th>Site System</th><th>Role</th><th>Site</th>
+                <th data-i18n="asset.status">Durum</th><th data-i18n="health.availability">Availability</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-backup" class="tab-content">
+          <div class="table-card">
+            <h3 data-i18n="db.backupInfo">Backup Bilgisi</h3>
+            <table id="backupTable" class="display" style="width:100%">
+              <thead><tr>
+                <th data-i18n="db.database">Veritabani</th><th data-i18n="db.backupType">Backup Tipi</th><th data-i18n="db.lastBackup">Son Backup</th><th data-i18n="db.hoursAgo">Saat Once</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/lib/jquery.min.js"></script>
+  <script src="/js/lib/datatables.min.js"></script>
+  <script src="/js/lib/chart.min.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/slide-panel.js"></script>
+  <script src="/js/export.js"></script>
+  <script src="/js/pages/db-monitor.js"></script>
+</body>
+</html>
